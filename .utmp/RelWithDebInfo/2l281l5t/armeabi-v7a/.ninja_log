@@ -1,0 +1,12 @@
+# ninja log v5
+118	282	8049592296294964	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	70e50afe8b5ad9f2
+284	484	8049592298217967	C:/UnityHub/UnityProject/Undead Survivor/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2l281l5t/obj/armeabi-v7a/libswappywrapper.so	697c7759fee994ba
+28	1036	8049592303795528	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	b9a1b6ada82b33f2
+15	1045	8049592303864307	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	baab601d6095a7d9
+102	1091	8049592304375060	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	3de932f7c68e5869
+42	1120	8049592304657896	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	6df2efafe275c75
+87	1130	8049592304760537	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	600328dce0d35f3
+72	1191	8049592305380035	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	156af149213899f2
+57	1307	8049592306522687	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	880afd657f250cf1
+1	1356	8049592306995341	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	4c9fb5072d796763
+1356	1491	8049592308378818	C:/UnityHub/UnityProject/Undead Survivor/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2l281l5t/obj/armeabi-v7a/libgame.so	f447837af111a535
