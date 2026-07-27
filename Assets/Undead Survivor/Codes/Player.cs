@@ -89,7 +89,7 @@ public class Player : MonoBehaviour
         anim.SetFloat("Speed", inputVec.magnitude); // Magnitude : 벡터의 크기 값만 반환
 
         if (inputVec.x != 0){ // x축 움직임이 0이 아닐 때
-            spriter.flipX = inputVec.x < 0; // 좌로 가는 경우 반전
+            spriter.flipX = inputVec.x > 0; // 우로 가는 경우 반전
         }
     }
 
