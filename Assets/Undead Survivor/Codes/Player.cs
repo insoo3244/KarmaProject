@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
+
+        spriter.flipX = true; // 스프라이트 좌/우 찐빠로 인해.. 평소에 flipX를 켜두고있기
+
         anim = GetComponent<Animator>();
         scanner = GetComponent<Scanner>();
         hands = GetComponentsInChildren<Hand>(true); // true 로 인해서, 비활성화 된 오브젝트도 인식

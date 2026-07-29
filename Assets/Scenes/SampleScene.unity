@@ -965,7 +965,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 8}
-  m_SizeDelta: {x: 18, y: 20}
+  m_SizeDelta: {x: 16, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &89566150
 MonoBehaviour:
@@ -1956,7 +1956,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 8}
-  m_SizeDelta: {x: 18, y: 20}
+  m_SizeDelta: {x: 16, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &438216005
 MonoBehaviour:
@@ -2831,10 +2831,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AchiveManager
   lockCharacter:
   - {fileID: 1444163298}
-  - {fileID: 1907610880}
+  - {fileID: 0}
   unlockCharacter:
   - {fileID: 1916987058}
-  - {fileID: 977791695}
+  - {fileID: 0}
   uiNotice: {fileID: 788883077}
 --- !u!4 &607100122
 Transform:
@@ -20332,7 +20332,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 8}
-  m_SizeDelta: {x: 18, y: 20}
+  m_SizeDelta: {x: 16, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1457180920
 MonoBehaviour:
@@ -20415,7 +20415,7 @@ GameObject:
   - component: {fileID: 1481606384}
   - component: {fileID: 1481606385}
   m_Layer: 0
-  m_Name: Hand Left
+  m_Name: Hand Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20623,7 +20623,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 8}
-  m_SizeDelta: {x: 18, y: 20}
+  m_SizeDelta: {x: 16, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1553057156
 MonoBehaviour:
@@ -20699,7 +20699,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -10}
+  m_AnchoredPosition: {x: 0, y: -14}
   m_SizeDelta: {x: 0, y: 4}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1618884778
@@ -26328,7 +26328,7 @@ GameObject:
   - component: {fileID: 1992889795}
   - component: {fileID: 1992889796}
   m_Layer: 0
-  m_Name: Hand Right
+  m_Name: Hand Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26420,7 +26420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b805de28abc8b47832634e8e819525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hand
-  isLeft: 0
+  isLeft: 1
   spriter: {fileID: 1992889795}
 --- !u!1 &1997785444
 GameObject:

@@ -10,11 +10,11 @@ public class Hand : MonoBehaviour
 
     SpriteRenderer player; // 플레이어 스프라이트렌더러 변수 선언
 
-    Vector3 rightPos = new Vector3(0.35f, -0.15f, 0); // 오른손 위치
-    Vector3 rightPosReverse = new Vector3(-0.15f, -0.15f, 0); // 반전 오른손
+    Vector3 leftPos = new Vector3(0.35f, -0.15f, 0); // 왼손 위치
+    Vector3 leftPosReverse = new Vector3(-0.15f, -0.15f, 0); // 반전 왼손
 
-    Quaternion leftRot = Quaternion.Euler(0, 0, -35); // 왼손 위치 (오일러함수 : 인자 x, y, z 축)
-    Quaternion leftRotReverse = Quaternion.Euler(0, 0, -135); // 반전 왼손
+    Quaternion rightRot = Quaternion.Euler(0, 0, -35); // 오른손 위치 (오일러함수 : 인자 x, y, z 축)
+    Quaternion rightRotReverse = Quaternion.Euler(0, 0, -135); // 반전 오른손
 
     void Awake()
     {
@@ -25,21 +25,22 @@ public class Hand : MonoBehaviour
     {
         bool isReverse = player.flipX; // 플레이어 방향이 반대방향인가?
 
-        if (isLeft) // 근접무기 (왼손)
+        if (isLeft) // 원거리무기 (왼손)
         {
             // 지역 위치(4원수)는 = 반대 방향 ? 반전 왼손 : 그냥 왼손
-            transform.localRotation = isReverse ? leftRotReverse : leftRot;
-            spriter.flipY = isReverse;
-
-            spriter.sortingOrder = isReverse ? 4 : 6; // 레이어 우선순위 변경 (왼손, 오른손을 서로 바꾸기)
-        }
-        else // 원거리무기 (오른손)
-        {
-            // 지역 위치(벡터)는 = 반대 방향 ? 반전 오른손 : 그냥 오른손
-            transform.localPosition = isReverse ? rightPosReverse : rightPos;
+            transform.localPosition = isReverse ? leftPosReverse : leftPos;
             spriter.flipX = isReverse;
 
             spriter.sortingOrder = isReverse ? 6 : 4; // 레이어 우선순위 변경 (왼손, 오른손을 서로 바꾸기)
+
+        }
+        else // 근접무기 (오른손)
+        {
+            // 지역 위치(벡터)는 = 반대 방향 ?  반전 오른손 : 그냥 오른손
+            transform.localRotation = isReverse ? rightRot : rightRotReverse;
+            spriter.flipY = isReverse;
+
+            spriter.sortingOrder = isReverse ? 4 : 6; // 레이어 우선순위 변경 (왼손, 오른손을 서로 바꾸기)
         }
     }
 }
