@@ -2831,10 +2831,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AchiveManager
   lockCharacter:
   - {fileID: 1444163298}
-  - {fileID: 0}
+  - {fileID: 1907610880}
   unlockCharacter:
   - {fileID: 1916987058}
-  - {fileID: 0}
+  - {fileID: 977791695}
   uiNotice: {fileID: 788883077}
 --- !u!4 &607100122
 Transform:
@@ -20045,7 +20045,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uACF5\uACA9\uB825 20% \uC99D\uAC00"
+  m_Text: "\uD5A5\uC0C1\uB41C \uC804\uD22C\uB825"
 --- !u!222 &1400944513
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20507,7 +20507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b805de28abc8b47832634e8e819525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hand
-  isLeft: 1
+  isLeft: 0
   spriter: {fileID: 1481606384}
 --- !u!1 &1547460371
 GameObject:
@@ -25537,7 +25537,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAC10\uC790\uB18D\uBD80"
+  m_Text: "\uC0AC\uB0E5\uAFBC"
 --- !u!222 &1787637615
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -26400,7 +26400,7 @@ SpriteRenderer:
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
