@@ -153,13 +153,12 @@ public class Enemy : MonoBehaviour
         Vector3 dirVec = transform.position - playerPos; // 플레이어의 반대 방향 벡터
 
         // 넉백 발생 
-        rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse); // 인자 : 방향과 크기 (임시 3), 즉발적인 힘(Impulse) 속성
+        rigid.AddForce(dirVec.normalized * 5, ForceMode2D.Impulse); // 인자 : 방향과 크기 (임시 3) -> 5, 즉발적인 힘(Impulse) 속성
     }
 
     // 적 사망 시 발동 함수
-    void Dead()
+    public void Dead()
     {
-
         gameObject.SetActive(false); // 오브젝트 비활성화
     }
 }
