@@ -2731,6 +2731,11 @@ MonoBehaviour:
   - {fileID: 22100000, guid: ee3216d5bcf61cc4799e71b614c714ca, type: 2}
   - {fileID: 22100000, guid: 7b5a808dcf225d549af3f5ff0323531a, type: 2}
   - {fileID: 22100000, guid: 368f41d42465cc5468f0b14e2c9b5427, type: 2}
+  deadDelay:
+  - 1
+  - 1
+  - 1
+  isDead: 0
 --- !u!114 &519985913
 MonoBehaviour:
   m_ObjectHideFlags: 0

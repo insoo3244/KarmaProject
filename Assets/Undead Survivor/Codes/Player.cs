@@ -12,12 +12,17 @@ public class Player : MonoBehaviour
     public Scanner scanner; // 스캔 변수
     public Hand[] hands; // 양 손 관리
     public RuntimeAnimatorController[] animCon; // 플레이어 애니메이션 관리
+    public float[] deadDelay = { 1f, 1f, 1f }; // 캐릭터별 게임종료 시간지연
+    public bool isDead = false; // 플레이어 생존 여부
+    Vector2 deadPosition; // 사망 당시의 위치를 저장할 변수
 
     SpriteRenderer spriter; // 스프라이트 불러오기
 
     Animator anim; // 애니메이션 제어
 
     Rigidbody2D rigid; // 캐릭터 객체
+
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     // 게임이 시작될 때 한 번 호출되는 함수
@@ -39,6 +44,7 @@ public class Player : MonoBehaviour
         anim.runtimeAnimatorController = animCon[GameManager.instance.playerId]; // 애니메이션 할당
     }
 
+
     // Update is called once per frame
     // 하나의 프레임마다 호출되는 함수
     void Update()
@@ -56,6 +62,16 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isLive) // 게임이 멈춰있다면 실행 X
         {
+            return;
+        }
+
+        if (isDead)
+        {
+            // 죽었다면 키보드 입력은 무시하고, 아까 박제해 둔 그 사망 위치로 매 프레임 꽂아버림
+            // 이렇게 하면 물리 엔진(Dynamic)은 살아있어서 무한 맵(Reposition)은 정상 작동하지만, 
+            // 캐릭터는 단 1mm도 미끄러지지 않고 그 자리에 얼어붙음
+            rigid.linearVelocity = Vector2.zero; 
+            rigid.MovePosition(deadPosition);
             return;
         }
 
@@ -77,13 +93,17 @@ public class Player : MonoBehaviour
     // InputVector 를 이용한 움직임 구현
     void OnMove(InputValue value)
     {
+        if(isDead) { // 죽었다면, 관성을 없애주고 입력 원천봉쇄
+            inputVec = Vector2.zero; 
+            return; 
+        }
         inputVec = value.Get<Vector2>(); // normalize를 패키지에서 설정했으니, 따로 구현 X
     }
 
     // 프레임이 종료 되기 전 실행되는 함수
     void LateUpdate()
     {
-        if (!GameManager.instance.isLive) // 게임이 멈춰있다면 실행 X
+        if (!GameManager.instance.isLive || isDead) // 게임이 멈춰있다면 실행 X
         {
             return;
         }
@@ -104,21 +124,34 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GameManager.instance.health -= Time.deltaTime * 10; // 틱당 10씩 감소
+        GameManager.instance.health -= Time.deltaTime * 100; // 틱당 10씩 감소
 
         // 플레이어의 일부 속성 비활성화 시키기
         // Spawner, HandLeft, HandRight 비활성화
-        if (GameManager.instance.health < 0)
+        if (GameManager.instance.health < 0 && !isDead)
         {
-            // Spawner 인덱스부터 시작 ~ 자식 오브젝트 개수 가져오기 childCount
-            for(int index = 2; index < transform.childCount; index++)
+            isDead = true; // 플레이어 사망
+            
+            // 1. 남은 물리 가속도만 깔끔하게 0으로 브레이크
+            rigid.linearVelocity = Vector2.zero; 
+            deadPosition = rigid.position; // 딱 죽은 그 순간의 좌표를 박제!
+
+            // 2. 무기 비활성화
+            foreach(Hand hand in hands) 
             {
-                // 인자에 해당하는 번호의 자식 가져오기 -> transform이 반환되므로, gameObject로 이어주기 -> 비활성화
-                transform.GetChild(index).gameObject.SetActive(false);
+                hand.gameObject.SetActive(false);
             }
 
-            anim.SetTrigger("Dead"); // 죽음 애니메이션 실행
-            GameManager.instance.GameOver(); // 게임 패배
+            // 3. 사망 애니메이션 및 게임 오버 타이머 실행
+            anim.SetTrigger("Dead"); 
+            StartCoroutine(DelayLose(deadDelay[GameManager.instance.playerId])); 
         }
+    }
+    
+    // 슬러그캣 사망 모션 출력을 위한 화면종료 지연함수
+    IEnumerator DelayLose(float delayTime) 
+    {   
+            yield return new WaitForSeconds(delayTime); 
+            GameManager.instance.GameOver(); // 게임 패배
     }
 }
