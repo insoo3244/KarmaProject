@@ -4,25 +4,28 @@ using UnityEngine.UI;
 
 public class CharacterSelect : MonoBehaviour
 {
-    [Header("UI 연결")]
+    [Header("UI Connect")]
     public RectTransform characterContainer; // Group 패널
     public Button leftButton;
     public Button rightButton;
+    public GameObject characterSelectGroup; // CharacterSelectManager 등록
+    public GameObject characterSelectPanel; // 캐릭터 선택창 전체 패널 (비활성화용)
+    public GameObject slugcatParentObj;      // 슬러그캣들이 들어있는 SlugCat 최상위 오브젝트
 
-    [Header("슬라이드 & 이징 설정 (속도 분리!)")]
+    [Header("Slide & Easing Settings")]
     public float uiSlideDuration = 0.5f;       // 💡 배경 UI 템플릿이 넘어가는 시간 (빠르게)
     public float slugcatMoveDuration = 1.5f;   // 💡 슬러그캣이 뛰어오는 시간 (느긋하게)
     public AnimationCurve slideCurve;
 
-    [Header("불투명도 & 크기(Scale) 연출 설정")]
+    [Header("CharacterTemplate Fade & Scale Settings")]
     public float fadeDistance = 1500f;
     public float minAlpha = 0.0f;
     public float minScale = 0.7f;
 
-    [Header("슬러그캣 모션 연결")]
+    [Header("Slugcat Motion Connect")]
     public SlugcatMotion[] slugcatMotions; // 0: Survivor, 1: Monk, 2: Hunter
 
-    [Header("슬러그캣 3대 영역 좌표 설정 (RectTransform 기준)")]
+    [Header("SlugCat Moving Point")]
     public float leftOutsideX = -1300f; // 화면 밖 왼쪽 X
     public float centerPosX = -250f;    // 화면 안 중앙 X (생존자 시작 위치)
     public float rightOutsideX = 800f;  // 화면 밖 오른쪽 X (수도승/사냥꾼 시작 위치)
@@ -57,6 +60,29 @@ public class CharacterSelect : MonoBehaviour
         UpdateButtons();
         UpdateCardEffects();
     }
+    
+public void OnClickStartGame()
+{
+    if (isMoving) return; // 이동 중 클릭 방지
+
+    // 1. GameManager에 선택된 캐릭터 ID 전달
+    if (GameManager.instance != null)
+    {
+        GameManager.instance.playerId = currentIndex;
+        GameManager.instance.GameStart(currentIndex); // 게임 시작 로직 실행
+    }
+
+    // 2. Canvas는 냅두고, 캐릭터 선택창 묶음만 쏙 끄기!
+    if (characterSelectGroup != null)
+    {
+        characterSelectGroup.SetActive(false);
+    }
+    else
+    {
+        // 만약 이 스크립트 자체가 CharacterSelect 오브젝트에 붙어있다면 자신을 끄기
+        gameObject.SetActive(false); 
+    }
+}
 
     // 슬러그캣들의 초기 위치 배치
     void InitSlugcatPositions()
@@ -166,17 +192,17 @@ public class CharacterSelect : MonoBehaviour
     {
         for (int i = 0; i < characterContainer.childCount; i++)
         {
-            RectTransform child = characterContainer.GetChild(i).GetComponent<RectTransform>();
-
-            float currentCardX = characterContainer.anchoredPosition.x + child.anchoredPosition.x;
-            float distanceFromCenter = Mathf.Abs(currentCardX);
-
-            float tFactor = Mathf.Clamp01(1f - (distanceFromCenter / fadeDistance));
-
+            // 1. 불투명도 연출: 거리에 상관없이 현재 인덱스면 즉시 1(선명), minAlpha(0.2)로 팍 줄임
             if (cardCanvasGroups[i] != null)
             {
-                cardCanvasGroups[i].alpha = Mathf.Lerp(minAlpha, 1f, tFactor);
+                cardCanvasGroups[i].alpha = (i == currentIndex) ? 1f : minAlpha;
             }
+
+            // 2. 크기 연출: 크기는 슬라이드되는 동안 부드럽게 커지고 작아지도록 기존 유지
+            RectTransform child = characterContainer.GetChild(i).GetComponent<RectTransform>();
+            float currentCardX = characterContainer.anchoredPosition.x + child.anchoredPosition.x;
+            float distanceFromCenter = Mathf.Abs(currentCardX);
+            float tFactor = Mathf.Clamp01(1f - (distanceFromCenter / fadeDistance));
 
             Transform scaleGroup = child.Find("ScaleGroup");
             if (scaleGroup != null)

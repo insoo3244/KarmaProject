@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,6 +33,9 @@ public class GameManager : MonoBehaviour
     public Transform uiJoy; // 조이스틱 설정 변수
     public GameObject enemyCleaner; // 적 청소기
 
+    [Header("# HUD Active")]
+    public GameObject hudCanvas; // hud UI
+
     void Awake()
     {
         instance = this; // 자기 자신으로 초기화
@@ -54,6 +58,12 @@ public class GameManager : MonoBehaviour
         uiLevelUp.Select(playerId % 2); // 현재 무기가 삽, 총 밖에 없어서 2로 나눈 나머지로 선택
         isLive = true;
         Resume(); // 게임 재생
+
+        // HUD 활성화
+        if (hudCanvas != null)
+        {
+            hudCanvas.SetActive(true);
+        }
 
         // 게임 시작 배경음악 재생
         AudioManager.instance.PlayBgm(true);

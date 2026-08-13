@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+    // Update is called once per frame  
     // 하나의 프레임마다 호출되는 함수
     void Update()
     {
