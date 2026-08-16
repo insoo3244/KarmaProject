@@ -33,7 +33,9 @@ public class GameManager : MonoBehaviour
     public Transform uiJoy; // 조이스틱 설정 변수
     public GameObject enemyCleaner; // 적 청소기
 
+    
     [Header("# HUD Active")]
+    public GameObject uiCanvas; // UI 큰 오브젝트
     public GameObject hudCanvas; // hud UI
 
     void Awake()
@@ -53,17 +55,18 @@ public class GameManager : MonoBehaviour
 
         // 캐릭터 선택이 끝나면, 플레이어 등장
         player.gameObject.SetActive(true);
-        
+
+        // 게임 시작 시, HUD 활성화
+        if (hudCanvas != null)
+        {
+            uiCanvas.SetActive(true);
+            hudCanvas.SetActive(true);
+        }
+
         // temp
         uiLevelUp.Select(playerId % 2); // 현재 무기가 삽, 총 밖에 없어서 2로 나눈 나머지로 선택
         isLive = true;
         Resume(); // 게임 재생
-
-        // HUD 활성화
-        if (hudCanvas != null)
-        {
-            hudCanvas.SetActive(true);
-        }
 
         // 게임 시작 배경음악 재생
         AudioManager.instance.PlayBgm(true);

@@ -9,9 +9,9 @@ AnimatorOverrideController:
   m_Name: AcPlayer2
   m_Controller: {fileID: 9100000, guid: 729e486a0736b884a9c6bf02aa747321, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 93a6824ddf48c3d4abc546c5b3b1462a, type: 2}
-    m_OverrideClip: {fileID: -1426613711029171378, guid: e47f14b34e0cd3747931ab2d3a8d624e, type: 3}
   - m_OriginalClip: {fileID: -5226451977642196390, guid: 7f696cc495670b54082abb9daa4a8568, type: 3}
     m_OverrideClip: {fileID: -5324873046792632229, guid: eb721578aa1e1aa46b7b1a517e486e55, type: 3}
   - m_OriginalClip: {fileID: 7400000, guid: b6a1ed27f5a22a1459c62d7186dd5736, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 27cff92067ebfcd409b92d654e3e3857, type: 2}
+  - m_OriginalClip: {fileID: -7309091170875470790, guid: 2fda9ee933e0bf14a9bfebc42a23882d, type: 3}
+    m_OverrideClip: {fileID: -1426613711029171378, guid: 5f3c2115c01bee341bdd4e362e3f0760, type: 3}
