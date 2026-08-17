@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public int level; // 레벨
     public int kill; // 킬 수
     public int exp; // 경험치
-    public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 }; // 임의 경험치 통
+   public int[] maxExpPerCharacter = { 3, 4, 6 }; // 경험치 통 / 수도승, 생존자, 사냥꾼
 
     [Header("# GameObject")] // 인스펙터 카테고리 분류
     public PoolManager pool; // 풀 매니저
@@ -167,13 +167,13 @@ public class GameManager : MonoBehaviour
         exp++;
 
         // 레벨업 기능
-        // +260222 : 현재 레벨과, 경험치 통 길이(10) 둘 중 최솟값을 가져오기 : 최고 경험치 재활용 기능 추가
-        // 10레벨을 넘기면 인덱스 범위 오류 방지
-        if(exp == nextExp[Mathf.Min(level, nextExp.Length - 1)])
+        int maxExp = maxExpPerCharacter[Mathf.Min(playerId, maxExpPerCharacter.Length - 1)];
+
+        if (exp >= maxExp)
         {
-            level++; // 레벨업
-            exp = 0; // 경험치 초기화
-            uiLevelUp.Show(); // 레벨업 함수 호출
+            level++; // 레벨(카르마 단계) 상승
+            exp = 0; // 카르마(경험치) 초기화
+            uiLevelUp.Show(); 
         }
     }
 

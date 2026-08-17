@@ -1,19 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// HUD 제작 스크립트
-
 public class HUD : MonoBehaviour
 {
     public enum InfoType { Exp, Level, Kill, Time, Health }
-    // 열거형 자료형 enum // 세미콜론; 도 필요없음
-    // 인스펙터에 슬롯을 만들어서 관리 가능
-    
-    public InfoType type; // 따로 선언해주기
+    public InfoType type;
 
-    // 텍스트와 슬라이더
     Text myText;
     Slider mySlider;
+
+    // 새로 추가할 배열 : 인스펙터에서 6개의 구슬을 직접 연결해줄 변수
+    [Header("# Karma UI")]
+    public GameObject[] expSlots; // 구슬의 부모 오브젝트 (켜고 끄기 용도)
+    public Image[] expFills;      // Fill
 
     void Awake()
     {
@@ -21,45 +20,52 @@ public class HUD : MonoBehaviour
         mySlider = GetComponent<Slider>();
     }
 
-    // UI에 필요한 요소들 switch 문으로 관리
     void LateUpdate()
     {
         switch (type)
         {
-            case InfoType.Exp: // 경험치
-                // 슬라이더에 나타낼 값 : 현재 경험치 / 최대 경험치
+            case InfoType.Exp:
+                // GameManager에서 현재 경험치와 현재 캐릭터의 최대 경험치 가져오기
                 float curExp = GameManager.instance.exp;
-                float maxExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
-                // +260222 : 현재 레벨과, 경험치 통 길이(10) 둘 중 최솟값을 가져오기 : 최고 경험치 재활용 기능 추가
-                // 10레벨을 넘기면 인덱스 범위 오류 방지
+                int maxExp = GameManager.instance.maxExpPerCharacter[Mathf.Min(GameManager.instance.playerId, GameManager.instance.maxExpPerCharacter.Length - 1)];
 
-                mySlider.value = curExp / maxExp;
+                // 💡 6개의 구슬을 순회하면서 끄고 켜기 + 게이지 채우기
+                for (int i = 0; i < expSlots.Length; i++)
+                {
+                    // 1. 캐릭터의 최대 카르마 개수(maxExp) 안쪽에 있는 슬롯만 켜기
+                    if (i < maxExp)
+                    {
+                        expSlots[i].SetActive(true);
+
+                        // 2. 물 차오르듯이 게이지 채우기 로직
+                        // Mathf.Clamp01 : 계산값을 무조건 0~1 사이로 고정하는 함수
+                        // (curExp - i)를 하면 0번 구슬부터 차례대로 1(꽉참)이 되고, 남은 소수점만큼 다음 구슬이 차오름
+                        expFills[i].fillAmount = Mathf.Clamp01(curExp - i);
+                    }
+                    else
+                    {
+                        // 안 쓰는 잉여 슬롯은 화면에서 숨기기
+                        expSlots[i].SetActive(false); 
+                    }
+                }
                 break;
-            case InfoType.Level: // 레벨
-                // 레벨 텍스트 : Lv.{순번:형태(소수점 없음)}
+                
+            case InfoType.Level: 
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
                 break;
-            case InfoType.Kill: // 킬 수
-                // 킬 수 텍스트 : {순번:형태(소수점 없음)}
+            case InfoType.Kill: 
                 myText.text = string.Format("{0:F0}", GameManager.instance.kill);
                 break;
-            case InfoType.Time: // 시간
-                // 남은 시간 표현 : 최대 시간 - 현재 시간
-                // 분과 초로 나누어서 표현하기
+            case InfoType.Time:
                 float remainTime = GameManager.instance.maxGameTime - GameManager.instance.gameTime;
                 int min = Mathf.FloorToInt(remainTime / 60);
                 int sec = Mathf.FloorToInt(remainTime % 60);
-
-                // 무조건 두 자리수 고정이니, D 사용. {0:D2} 하면 두 자리수 고정
                 myText.text = string.Format("{0:D2}:{1:D2}", min, sec);
                 break;
-            case InfoType.Health: // 체력
-                // 슬라이더에 나타낼 값 : 현재 체력 / 최대 체력
+            case InfoType.Health: 
                 float curHealth = GameManager.instance.health;
                 float maxHealth = GameManager.instance.maxHealth;
-
                 mySlider.value = curHealth / maxHealth;
-                
                 break;
             default:
                 break;
