@@ -9,10 +9,9 @@ public class HUD : MonoBehaviour
     Text myText;
     Slider mySlider;
 
-    // 새로 추가할 배열 : 인스펙터에서 6개의 구슬을 직접 연결해줄 변수
     [Header("# Karma UI")]
-    public GameObject[] expSlots; // 구슬의 부모 오브젝트 (켜고 끄기 용도)
-    public Image[] expFills;      // Fill
+    public GameObject[] expSlots; // 구슬 부모 오브젝트 6개 (ExpSlot_0 ~ 5)
+    public Image[] expFills;      // 구슬 내부 하얀 Fill 이미지 6개
 
     void Awake()
     {
@@ -25,35 +24,42 @@ public class HUD : MonoBehaviour
         switch (type)
         {
             case InfoType.Exp:
-                // GameManager에서 현재 경험치와 현재 캐릭터의 최대 경험치 가져오기
+                // 1. 현재 경험치 수치와 다음 레벨 필요 경험치(GetMaxExp) 가져오기
                 float curExp = GameManager.instance.exp;
-                int maxExp = GameManager.instance.maxExpPerCharacter[Mathf.Min(GameManager.instance.playerId, GameManager.instance.maxExpPerCharacter.Length - 1)];
+                float maxExp = GameManager.instance.GetMaxExp();
 
-                // 💡 6개의 구슬을 순회하면서 끄고 켜기 + 게이지 채우기
+                // 2. 캐릭터 ID에 맞는 구체 노출 개수 (수도승:3, 생존자:4, 사냥꾼:6)
+                int characterId = GameManager.instance.playerId;
+                int orbCount = GameManager.instance.maxOrbPerCharacter[Mathf.Min(characterId, GameManager.instance.maxOrbPerCharacter.Length - 1)];
+
+                // 3. 현재 레벨 승급 에너지의 총량 비율 (0.0 ~ 1.0)
+                float expRatio = Mathf.Clamp01(curExp / maxExp);
+
+                // 4. 비율을 활성화된 구체 개수 비례로 펼치기 (0.0 ~ orbCount)
+                float totalFill = expRatio * orbCount;
+
+                // 5. 구체 6개 순회하며 켜고 끄기 및 게이지 채우기
                 for (int i = 0; i < expSlots.Length; i++)
                 {
-                    // 1. 캐릭터의 최대 카르마 개수(maxExp) 안쪽에 있는 슬롯만 켜기
-                    if (i < maxExp)
+                    if (i < orbCount)
                     {
                         expSlots[i].SetActive(true);
 
-                        // 2. 물 차오르듯이 게이지 채우기 로직
-                        // Mathf.Clamp01 : 계산값을 무조건 0~1 사이로 고정하는 함수
-                        // (curExp - i)를 하면 0번 구슬부터 차례대로 1(꽉참)이 되고, 남은 소수점만큼 다음 구슬이 차오름
-                        expFills[i].fillAmount = Mathf.Clamp01(curExp - i);
+                        // 각 구체별로 0.0 ~ 1.0 값 수직 게이지 적용
+                        expFills[i].fillAmount = Mathf.Clamp01(totalFill - i);
                     }
                     else
                     {
-                        // 안 쓰는 잉여 슬롯은 화면에서 숨기기
-                        expSlots[i].SetActive(false); 
+                        // 그 캐릭터가 안 쓰는 나머지 구체는 숨김 처리
+                        expSlots[i].SetActive(false);
                     }
                 }
                 break;
-                
-            case InfoType.Level: 
+
+            case InfoType.Level:
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
                 break;
-            case InfoType.Kill: 
+            case InfoType.Kill:
                 myText.text = string.Format("{0:F0}", GameManager.instance.kill);
                 break;
             case InfoType.Time:
@@ -62,7 +68,7 @@ public class HUD : MonoBehaviour
                 int sec = Mathf.FloorToInt(remainTime % 60);
                 myText.text = string.Format("{0:D2}:{1:D2}", min, sec);
                 break;
-            case InfoType.Health: 
+            case InfoType.Health:
                 float curHealth = GameManager.instance.health;
                 float maxHealth = GameManager.instance.maxHealth;
                 mySlider.value = curHealth / maxHealth;

@@ -23,7 +23,16 @@ public class GameManager : MonoBehaviour
     public int level; // 레벨
     public int kill; // 킬 수
     public int exp; // 경험치
-   public int[] maxExpPerCharacter = { 3, 4, 6 }; // 경험치 통 / 수도승, 생존자, 사냥꾼
+
+    // 캐릭터별 구체 노출 개수 (0번 생존자: 4개, 1번 수도승: 3개, 2번 사냥꾼: 6개)
+    [Header("# Karma Orbs Count Per Character")]
+    public int[] maxOrbPerCharacter = { 4, 3, 6 };
+
+    // 캐릭터별 레벨업 필요 경험치 테이블 (자유롭게 수치 조절 가능!)
+    [Header("# Exp Tables Per Character")]
+    public int[] expSurvivor = { 10, 20, 35, 55, 80 }; // 0번 생존자 레벨별 필요 경험치
+    public int[] expMonk = { 5, 10, 15, 20, 30 };      // 1번 수도승 레벨별 필요 경험치
+    public int[] expHunter = { 15, 30, 50, 80, 120 };  // 2번 사냥꾼 레벨별 필요 경험치
 
     [Header("# GameObject")] // 인스펙터 카테고리 분류
     public PoolManager pool; // 풀 매니저
@@ -33,7 +42,6 @@ public class GameManager : MonoBehaviour
     public Transform uiJoy; // 조이스틱 설정 변수
     public GameObject enemyCleaner; // 적 청소기
 
-    
     [Header("# HUD Active")]
     public GameObject uiCanvas; // UI 큰 오브젝트
     public GameObject hudCanvas; // hud UI
@@ -43,7 +51,7 @@ public class GameManager : MonoBehaviour
         instance = this; // 자기 자신으로 초기화
 
         // targetFrameRate : 게임 프레임률 지정
-        Application.targetFrameRate= 60;
+        Application.targetFrameRate = 60;
     }
 
     // +) 260302 : Start -> GameStart 이름 변경 후, public 속성 변경.
@@ -138,7 +146,6 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-
     void Update()
     {
         if (!isLive) // 게임이 멈춰있다면 실행 X
@@ -148,14 +155,40 @@ public class GameManager : MonoBehaviour
 
         gameTime += Time.deltaTime; // 한 프레임 당 시간(deltaTime) 계속 더하기
 
-        if(gameTime > maxGameTime) // 게임 시간이 최대시간보다 크면
+        if (gameTime > maxGameTime) // 게임 시간이 최대시간보다 크면
         {
             gameTime = maxGameTime; // 최대시간으로 초기화
             GameVictory(); // 게임 승리
         }
     }
 
-    // 경험치 얻기 함수
+    // 💡 추가된 함수: 현재 선택된 캐릭터(playerId)와 레벨(level)에 맞는 최대 경험치통 수치를 반환
+    public float GetMaxExp()
+    {
+        int[] targetTable;
+
+        switch (playerId)
+        {
+            case 0: // 0번 생존자
+                targetTable = expSurvivor;
+                break;
+            case 1: // 1번 수도승
+                targetTable = expMonk;
+                break;
+            case 2: // 2번 사냥꾼
+                targetTable = expHunter;
+                break;
+            default:
+                targetTable = expSurvivor;
+                break;
+        }
+
+        // 현재 레벨이 경험치 테이블 인덱스를 넘어서면 마지막 경험치통 수치로 고정
+        int maxIndex = targetTable.Length - 1;
+        return targetTable[Mathf.Min(level, maxIndex)];
+    }
+
+    // 경험치 얻기 함수 (수정됨)
     public void GetExp()
     {
         // 죽어있다면 종료 -> 적 청소기가 죽이는 적들의 경험치는 계산 X
@@ -166,14 +199,12 @@ public class GameManager : MonoBehaviour
 
         exp++;
 
-        // 레벨업 기능
-        int maxExp = maxExpPerCharacter[Mathf.Min(playerId, maxExpPerCharacter.Length - 1)];
-
-        if (exp >= maxExp)
+        // 💡 GetMaxExp()를 호출하여 현재 캐릭터 및 레벨 기준 최대 경험치와 비교
+        if (exp >= GetMaxExp())
         {
             level++; // 레벨(카르마 단계) 상승
             exp = 0; // 카르마(경험치) 초기화
-            uiLevelUp.Show(); 
+            uiLevelUp.Show();
         }
     }
 

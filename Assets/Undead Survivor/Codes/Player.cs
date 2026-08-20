@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GameManager.instance.health -= Time.deltaTime * 100; // 틱당 10씩 감소
+        GameManager.instance.health -= Time.deltaTime * 50; // 틱당 10씩 감소
 
         // 플레이어의 일부 속성 비활성화 시키기
         // Spawner, HandLeft, HandRight 비활성화
